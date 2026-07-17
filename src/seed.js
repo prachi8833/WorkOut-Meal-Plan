@@ -172,7 +172,7 @@ export function defaultDoc() {
     sessions: SESSIONS.map(s => ({ ...s, main: [...s.main], pool: [...s.pool], rot: 0 })),
     supps: SUPPS.map(s => ({ ...s })),
     food: JSON.parse(JSON.stringify(FOOD)),
-    settings: { tempoSec: 3, restSec: 75 },
+    settings: { tempoSec: 3, restSec: 75, freePace: false },
     foodSeed: null,
     log: {}, // "YYYY-MM-DD" -> { sessionId, sessionName, gym, accent, calories }
     targets: { weeklyVisits: 4, weeklyCalories: 1200 },

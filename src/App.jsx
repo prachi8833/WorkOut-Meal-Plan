@@ -150,6 +150,12 @@ export default function App() {
                     onChange={e => update({ ...doc, settings: { ...doc.settings, restSec: Math.max(15, parseInt(e.target.value) || 75) } })}
                     style={{ background: C.panel2, border: `1px solid ${C.line}`, borderRadius: 8, color: C.text, padding: "8px 10px", outline: "none" }} />
                 </label>
+                <label style={{ display: "flex", alignItems: "center", gap: 8, flex: 1, cursor: "pointer" }}>
+                  <input type="checkbox" checked={doc.settings?.freePace ?? false}
+                    onChange={e => update({ ...doc, settings: { ...doc.settings, freePace: e.target.checked } })}
+                    style={{ width: 16, height: 16, cursor: "pointer" }} />
+                  Free pace — no voice count, just tap Set done
+                </label>
               </div>
             )}
           </>

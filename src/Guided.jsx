@@ -23,6 +23,7 @@ function parseReps(str) {
 export default function Guided({ queue, doc, onClose, onComplete }) {
   const tempoMs = (doc.settings?.tempoSec ?? 3) * 1000;
   const restSec = doc.settings?.restSec ?? 75;
+  const freePace = doc.settings?.freePace ?? false;
   const [exIdx, setExIdx] = useState(0);
   const [setIdx, setSetIdx] = useState(0);
   const [phase, setPhase] = useState("ready"); // ready | work | rest | done
@@ -36,7 +37,7 @@ export default function Guided({ queue, doc, onClose, onComplete }) {
   const sets = ex ? ex.sets : [];
   const set = sets[setIdx];
   const reps = set ? parseReps(set[1]) : null;
-  const weight = set && typeof set[0] === "number" ? `${set[0]} lb` : set && set[0] === "bw" ? "Bodyweight" : "";
+  const weight = set && typeof set[0] === "number" ? `${set[0]} lb` : set && set[0] === "bw" ? "Bodyweight" : set && set[0] === "asst" ? "Assisted" : "";
 
   // Keep the screen awake during a guided session. Browsers auto-release the
   // wake lock when the tab is backgrounded, so re-acquire it on return —
@@ -72,7 +73,10 @@ export default function Guided({ queue, doc, onClose, onComplete }) {
     }
 
     if (phase === "work") {
-      if (reps?.sec) {
+      if (freePace) {
+        // Free pace — no forced tempo or hold timer, just wait for "Set done".
+        setCount(0);
+      } else if (reps?.sec) {
         let c = reps.sec; setCount(c);
         timer.current = setInterval(() => {
           c -= 1; setCount(c);
@@ -124,6 +128,14 @@ export default function Guided({ queue, doc, onClose, onComplete }) {
 
   function skip() { clear(); window.speechSynthesis?.cancel?.(); if (phase === "rest") advance(); else finishSet(); }
 
+  function skipExercise() {
+    clear(); window.speechSynthesis?.cancel?.();
+    const lastEx = exIdx >= queue.length - 1;
+    if (lastEx) { speak("Session complete. Great work, Prachi!"); setPhase("done"); onComplete?.(); return; }
+    speak(`Moving on to ${doc.exercises[queue[exIdx + 1]]?.name}.`);
+    setExIdx(exIdx + 1); setSetIdx(0); setPhase("ready");
+  }
+
   const color = ex ? C[ex.m] : C.legs;
   const big = phase === "ready" ? count : phase === "rest" ? count : reps?.sec ? count : count;
   const phaseLabel = { ready: "GET READY", work: reps?.sec ? "HOLD" : "REPS", rest: "REST", done: "DONE" }[phase];
@@ -172,12 +184,14 @@ export default function Guided({ queue, doc, onClose, onComplete }) {
           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 260 }}>
             <div style={{ fontFamily: font.body, fontSize: 13, fontWeight: 700, letterSpacing: 3, color: phase === "rest" ? C.biceps : color }}>{phaseLabel}</div>
             <div style={{ fontFamily: font.display, fontSize: 130, lineHeight: 1, color: C.text, fontVariantNumeric: "tabular-nums" }}>
-              {reps === null && phase === "work" ? "—" : big}
+              {(reps === null || (freePace && phase === "work")) ? "—" : big}
             </div>
             <div style={{ fontSize: 13, color: C.dim }}>
-              {phase === "work" && reps?.n ? `of ${reps.n}${reps.side ? " per side" : ""} · ${weight}` : ""}
-              {phase === "work" && reps?.sec ? `seconds left · ${weight || "hold"}` : ""}
-              {phase === "work" && reps === null ? "Do the set, then tap Skip when done" : ""}
+              {phase === "work" && freePace && reps?.n ? `aim for ${reps.n}${reps.side ? " per side" : ""} · ${weight} — your pace, tap Set done` : ""}
+              {phase === "work" && freePace && reps?.sec ? `aim for ~${reps.sec}s · ${weight || "hold"} — your pace, tap Set done` : ""}
+              {phase === "work" && !freePace && reps?.n ? `of ${reps.n}${reps.side ? " per side" : ""} · ${weight}` : ""}
+              {phase === "work" && !freePace && reps?.sec ? `seconds left · ${weight || "hold"}` : ""}
+              {phase === "work" && reps === null ? "Do the set, then tap Set done when done" : ""}
               {phase === "rest" ? "seconds — breathe, shake it out" : ""}
               {phase === "ready" ? `starting set ${setIdx + 1} of ${sets.length}` : ""}
             </div>
@@ -187,6 +201,9 @@ export default function Guided({ queue, doc, onClose, onComplete }) {
             <Btn onClick={() => setPaused(p => !p)}>{paused ? "▶ Resume" : "⏸ Pause"}</Btn>
             <Btn onClick={skip} primary>{phase === "rest" ? "Skip rest →" : "Set done →"}</Btn>
           </div>
+          <button onClick={skipExercise} style={{ marginTop: 10, background: "none", border: "none", color: C.faint, fontSize: 12, fontWeight: 700, cursor: "pointer", textAlign: "center" }}>
+            Skip rest of this exercise →
+          </button>
         </>
       ) : null}
     </div>
