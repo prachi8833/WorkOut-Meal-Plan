@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { C, MUSCLE_LABEL, font } from "./theme.js";
 import { Figure } from "./icons.jsx";
 import Guided from "./Guided.jsx";
@@ -162,7 +162,27 @@ export default function TrainTab({ doc, update, editMode }) {
   const [sessionId, setSessionId] = useState(doc.sessions[0]?.id);
   const [guided, setGuided] = useState(null); // array of exIds
   const session = doc.sessions.find(s => s.id === sessionId) || doc.sessions[0];
+  const tabsRef = useRef(null);
+  const drag = useRef(null);
   if (!session) return null;
+
+  // Mouse click-and-drag horizontal scroll for the session tab row (touch already scrolls natively).
+  const onTabsMouseDown = (e) => {
+    drag.current = { startX: e.pageX, startScroll: tabsRef.current.scrollLeft, moved: false };
+  };
+  const onTabsMouseMove = (e) => {
+    if (!drag.current) return;
+    const dx = e.pageX - drag.current.startX;
+    if (Math.abs(dx) > 3) drag.current.moved = true;
+    tabsRef.current.scrollLeft = drag.current.startScroll - dx;
+  };
+  const endTabsDrag = () => { drag.current = null; };
+  const onTabClick = (id) => { if (!drag.current?.moved) setSessionId(id); };
+  const onTabsWheel = (e) => {
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    e.currentTarget.scrollLeft += e.deltaY;
+    e.preventDefault();
+  };
   const rotationEx = session.pool.length ? session.pool[(session.rot || 0) % session.pool.length] : null;
 
   const patchSession = (fn) => { const next = structuredClone(doc); fn(next.sessions.find(s => s.id === session.id)); update(next); };
@@ -176,9 +196,10 @@ export default function TrainTab({ doc, update, editMode }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      <div style={{ display: "flex", gap: 8, overflowX: "auto", margin: "0 -16px", padding: "0 16px 4px" }}>
+      <div ref={tabsRef} onMouseDown={onTabsMouseDown} onMouseMove={onTabsMouseMove} onMouseUp={endTabsDrag} onMouseLeave={endTabsDrag} onWheel={onTabsWheel}
+        style={{ display: "flex", gap: 8, overflowX: "auto", margin: "0 -16px", padding: "0 16px 4px", cursor: "grab", userSelect: "none" }}>
         {doc.sessions.map(s => (
-          <button key={s.id} onClick={() => setSessionId(s.id)}
+          <button key={s.id} onClick={() => onTabClick(s.id)}
             style={{ flexShrink: 0, padding: "9px 14px", borderRadius: 24, cursor: "pointer", fontFamily: font.body, fontSize: 12.5, fontWeight: 700,
               background: s.id === session.id ? s.accent : C.panel, color: s.id === session.id ? "#17141A" : C.dim, border: `1px solid ${s.id === session.id ? s.accent : C.line}` }}>
             {s.name}
