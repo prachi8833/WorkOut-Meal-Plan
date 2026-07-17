@@ -149,22 +149,21 @@ export function FoodTab({ doc, update, editMode }) {
 
 /* ================= AUTH ================= */
 export function Auth() {
+  const [mode, setMode] = useState("signin"); // signin | signup
   const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [stage, setStage] = useState("email");
+  const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const sendCode = async () => {
+  const canSubmit = email.includes("@") && password.length >= 6 && !busy;
+
+  const submit = async () => {
+    if (!canSubmit) return;
     setBusy(true); setMsg("");
-    const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: true } });
-    setBusy(false);
-    if (error) setMsg(error.message);
-    else { setStage("code"); setMsg("Check your email for a 6-digit code."); }
-  };
-  const verify = async () => {
-    setBusy(true); setMsg("");
-    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "email" });
+    const creds = { email: email.trim(), password };
+    const { error } = mode === "signin"
+      ? await supabase.auth.signInWithPassword(creds)
+      : await supabase.auth.signUp(creds);
     setBusy(false);
     if (error) setMsg(error.message);
   };
@@ -175,25 +174,20 @@ export function Auth() {
         <div style={{ fontFamily: font.display, fontSize: 26, letterSpacing: 2, textTransform: "uppercase", color: C.text, textAlign: "center" }}>
           Prachi<span style={{ color: C.legs }}>.</span>Hub
         </div>
-        <div style={{ fontSize: 12.5, color: C.dim, textAlign: "center" }}>Sign in with your email — a code will be sent, no password needed.</div>
-        {stage === "email" ? (
-          <>
-            <input type="email" placeholder="you@email.com" value={email} onChange={e => setEmail(e.target.value)} style={inp} />
-            <button onClick={sendCode} disabled={busy || !email.includes("@")}
-              style={{ padding: "13px 0", borderRadius: 12, background: C.legs, color: "#17141A", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", opacity: busy ? 0.6 : 1 }}>
-              {busy ? "Sending…" : "Send code"}
-            </button>
-          </>
-        ) : (
-          <>
-            <input inputMode="numeric" placeholder="6-digit code" value={code} onChange={e => setCode(e.target.value)} style={{ ...inp, textAlign: "center", letterSpacing: 6, fontSize: 18 }} />
-            <button onClick={verify} disabled={busy || code.length < 6}
-              style={{ padding: "13px 0", borderRadius: 12, background: C.legs, color: "#17141A", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", opacity: busy ? 0.6 : 1 }}>
-              {busy ? "Checking…" : "Sign in"}
-            </button>
-            <button onClick={() => setStage("email")} style={{ background: "none", border: "none", color: C.dim, fontSize: 12, cursor: "pointer" }}>Use a different email</button>
-          </>
-        )}
+        <div style={{ fontSize: 12.5, color: C.dim, textAlign: "center" }}>
+          {mode === "signin" ? "Sign in to your hub." : "Create your account — first time only."}
+        </div>
+        <input type="email" placeholder="you@email.com" value={email} onChange={e => setEmail(e.target.value)} style={inp} />
+        <input type="password" placeholder="Password (6+ characters)" value={password} onChange={e => setPassword(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && submit()} style={inp} />
+        <button onClick={submit} disabled={!canSubmit}
+          style={{ padding: "13px 0", borderRadius: 12, background: C.legs, color: "#17141A", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", opacity: canSubmit ? 1 : 0.6 }}>
+          {busy ? (mode === "signin" ? "Signing in…" : "Creating…") : (mode === "signin" ? "Sign in" : "Create account")}
+        </button>
+        <button onClick={() => { setMode(m => m === "signin" ? "signup" : "signin"); setMsg(""); }}
+          style={{ background: "none", border: "none", color: C.dim, fontSize: 12, cursor: "pointer" }}>
+          {mode === "signin" ? "First time? Create your account" : "Already have an account? Sign in"}
+        </button>
         {msg && <div style={{ fontSize: 12, color: C.dim, textAlign: "center" }}>{msg}</div>}
       </div>
     </div>

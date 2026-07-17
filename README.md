@@ -16,7 +16,7 @@ This repo (`WorkOut-Meal-Plan`) has everything: `package.json`, `index.html`, an
 2. Click **New project**. Name: `prachi-hub`. Set any database password (save it somewhere, you won't need it day-to-day). Pick the region closest to you. Click **Create**.
 3. Wait ~2 minutes for the project to finish setting up.
 4. In the left sidebar, open **SQL Editor** → **New query**. Open the file `supabase/schema.sql` from this project, copy ALL of it, paste it in, and click **Run**. You should see "Success".
-5. In the left sidebar, go to **Authentication → Providers** (may be under Sign In / Up) and make sure **Email** is enabled (it is by default). No other provider needed.
+5. In the left sidebar, go to **Authentication → Sign In / Providers**, open the **Email** provider, and turn **off** "Confirm email" — this app signs in with email + password directly, with no confirmation email to wire up. Save.
 6. Go to **Settings → API** (or "Project Settings → API Keys") and keep this page open — you need two values in the next step:
    - **Project URL** (looks like `https://abcdefgh.supabase.co`)
    - **anon / public key** (a long string)
@@ -34,9 +34,10 @@ This repo (`WorkOut-Meal-Plan`) has everything: `package.json`, `index.html`, an
 ## Step 4 — First sign-in
 
 1. Open your Vercel URL on your phone.
-2. Enter your email → Supabase emails you a **6-digit code** → enter it. That's it, no password. You stay signed in on that device.
+2. Tap **"First time? Create your account"**, enter your email and a password (6+ characters, something only you know), tap **Create account**. You're in immediately — no email step. You stay signed in on that device.
 3. Your hub loads pre-filled with all your sessions, weights, supplements, and meals. First sign-in seeds the database automatically.
-4. **Add to home screen** (Safari: Share → Add to Home Screen / Chrome: menu → Add to Home Screen) — it opens full-screen like a real app.
+4. Next time, just enter the same email + password on the sign-in screen.
+5. **Add to home screen** (Safari: Share → Add to Home Screen / Chrome: menu → Add to Home Screen) — it opens full-screen like a real app.
 
 ---
 
@@ -59,6 +60,6 @@ Edit any file directly on GitHub (open the file → pencil icon → commit) — 
 ## Troubleshooting
 
 - **"Almost there — connect Supabase" screen** → env variables missing or misspelled in Vercel. Add them, then Deployments → ⋯ → Redeploy.
-- **Code email doesn't arrive** → check spam; Supabase's built-in email sender is rate-limited to a few per hour.
+- **Forgot your password** → Supabase dashboard → Authentication → Users → find your row → **Reset Password**, and set a new one. Don't delete the user to "start over" — your hub data is tied to that user's ID and would be deleted with it (see `supabase/schema.sql`'s `on delete cascade`).
 - **"Save failed"** → usually offline, or the schema.sql step was skipped. Re-run Step 2.4.
 - **No voice during guided mode** → phone on silent, or tap the screen once first (browsers require one interaction before audio).
