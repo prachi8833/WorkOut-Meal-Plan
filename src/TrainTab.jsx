@@ -166,6 +166,14 @@ export default function TrainTab({ doc, update, editMode }) {
   const drag = useRef(null);
   if (!session) return null;
 
+  const gyms = [...new Set(doc.sessions.map(s => s.gym))];
+  const gymSessions = doc.sessions.filter(s => s.gym === session.gym);
+  const switchGym = (gym) => {
+    if (gym === session.gym) return;
+    const match = doc.sessions.find(s => s.gym === gym && s.group === session.group) || doc.sessions.find(s => s.gym === gym);
+    if (match) setSessionId(match.id);
+  };
+
   // Mouse click-and-drag horizontal scroll for the session tab row (touch already scrolls natively).
   const onTabsMouseDown = (e) => {
     drag.current = { startX: e.pageX, startScroll: tabsRef.current.scrollLeft, moved: false };
@@ -198,7 +206,7 @@ export default function TrainTab({ doc, update, editMode }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div ref={tabsRef} onMouseDown={onTabsMouseDown} onMouseMove={onTabsMouseMove} onMouseUp={endTabsDrag} onMouseLeave={endTabsDrag} onWheel={onTabsWheel}
         style={{ display: "flex", gap: 8, overflowX: "auto", margin: "0 -16px", padding: "0 16px 4px", cursor: "grab", userSelect: "none" }}>
-        {doc.sessions.map(s => (
+        {gymSessions.map(s => (
           <button key={s.id} onClick={() => onTabClick(s.id)}
             style={{ flexShrink: 0, padding: "9px 14px", borderRadius: 24, cursor: "pointer", fontFamily: font.body, fontSize: 12.5, fontWeight: 700,
               background: s.id === session.id ? s.accent : C.panel, color: s.id === session.id ? "#17141A" : C.dim, border: `1px solid ${s.id === session.id ? s.accent : C.line}` }}>
@@ -211,7 +219,15 @@ export default function TrainTab({ doc, update, editMode }) {
         <h2 style={{ fontFamily: font.display, fontSize: 30, fontWeight: 400, margin: 0, color: C.text, textTransform: "uppercase", lineHeight: 1.05 }}>{session.name}</h2>
         <div style={{ display: "flex", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: session.accent, background: session.accent + "16", padding: "3px 10px", borderRadius: 20 }}>{session.tag}</span>
-          <span style={{ fontSize: 11, fontWeight: 700, color: C.dim, background: C.panel, border: `1px solid ${C.line}`, padding: "3px 10px", borderRadius: 20 }}>📍 {session.gym}</span>
+          {gyms.map(g => (
+            <button key={g} onClick={() => switchGym(g)}
+              style={{ fontSize: 11, fontWeight: 700, cursor: "pointer", padding: "3px 10px", borderRadius: 20,
+                color: g === session.gym ? "#17141A" : C.dim,
+                background: g === session.gym ? C.text : C.panel,
+                border: `1px solid ${g === session.gym ? C.text : C.line}` }}>
+              📍 {g}
+            </button>
+          ))}
         </div>
       </div>
 

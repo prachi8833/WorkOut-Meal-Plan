@@ -4,7 +4,6 @@ import { C } from "./theme.js";
    sets: descending weights (heavy → light). Max is the ceiling, never exceeded.
    w:null = weight not logged yet (tap to add). unit "bw" = bodyweight. */
 export const EX = {
-  deadhang:      { name: "Dead Hang", m: "back", icon: "hang", cue: "Full grip, shoulders active — building toward your pull-up", sets: [["bw","20–30s"],["bw","20–30s"],["bw","20–30s"]] },
   asstpullup:    { name: "Assisted Pull-Up", m: "back", icon: "hang", cue: "Chest to bar, slow negative on the way down", sets: [["asst","6–8"],["asst","6–8"],["asst","6–8"]] },
   latpulldown:   { name: "Lat Pulldown — Wide Grip", m: "back", icon: "pulldown", cue: "Pull elbows to ribs, chest tall — no swinging", sets: [[35,"7–8"],[35,"8"],[27.5,"10"],[20,"12"]] },
   cablerow:      { name: "Seated Cable Row", m: "back", icon: "row", cue: "Squeeze shoulder blades together at the back", sets: [[null,"10"],[null,"12"],[null,"12"]] },
@@ -13,13 +12,18 @@ export const EX = {
   singlearmpd:   { name: "Single-Arm Cable Pulldown", m: "back", icon: "pulldown", cue: "Kneel, pull to hip — feel the lat stretch at the top", sets: [[null,"12/side"],[null,"12/side"],[null,"12/side"]] },
   bentcablerow:  { name: "Bent-Over Cable Row", m: "back", icon: "row", cue: "Hinge, flat back — mid back + lower lats", sets: [[null,"12"],[null,"12"],[null,"12"]] },
   kneelpd:       { name: "Kneeling Cable Pulldown", m: "back", icon: "pulldown", cue: "Tall kneel, drive elbows down and back", sets: [[null,"12"],[null,"12"],[null,"12"]] },
+  pulldownmachine: { name: "Pull-Down Machine", m: "back", icon: "pulldown", cue: "Pin-loaded — pull elbows down and back, no swinging", sets: [[null,"10"],[null,"12"],[null,"12"]] },
+  standingcablerow: { name: "Standing Cable Row", m: "back", icon: "row", cue: "Split stance, squeeze shoulder blades — single cable column", sets: [[null,"12"],[null,"12"],[null,"12"]] },
+  dbbentrow:     { name: "DB Bent-Over Row", m: "back", icon: "row", cue: "Hinge, flat back, row to hip — control the negative", sets: [[null,"10"],[null,"12"],[null,"12"]] },
 
   legpress:      { name: "Leg Press", m: "legs", icon: "legpress", cue: "Feet mid-platform, push through heels — don't lock knees", sets: [[90,"10"],[80,"12"],[70,"12"]] },
   rdl:           { name: "Romanian Deadlift — DBs", m: "legs", icon: "hinge", cue: "Hips back, soft knees — stretch the hamstrings, don't round", sets: [[30,"12"],[30,"12"],[25,"12"]] },
   rdlcable:      { name: "Romanian Deadlift — Cable", m: "legs", icon: "hinge", cue: "Constant tension version — same hinge, bar close to legs", sets: [[100,"12"],[90,"12"],[80,"12"]] },
   legcurl:       { name: "Seated Leg Curl", m: "legs", icon: "legcurl", cue: "Curl hard, pause 1s, control the return", sets: [[60,"8–10"],[50,"12"],[50,"12"]] },
+  lyinglegcurl:  { name: "Lying Leg Curl", m: "legs", icon: "legcurl", cue: "Face down, curl heels to glutes, control the negative", sets: [[null,"10"],[null,"12"],[null,"12"]] },
   hipabd:        { name: "Hip Abduction", m: "legs", icon: "abduction", cue: "Lean slightly forward for upper glute — pause at the widest point", sets: [[110,"10"],[100,"12"],[90,"15"]] },
   sumosquat:     { name: "Cable Sumo Squat", m: "legs", icon: "squat", cue: "Wide stance, toes out — sit between your heels", sets: [[35,"10"],[30,"12"],[25,"12"]] },
+  dbgobletsquat: { name: "DB Goblet Squat", m: "legs", icon: "squat", cue: "DB held at chest, sit between your heels, chest tall", sets: [[null,"10"],[null,"12"],[null,"12"]] },
   pullthrough:   { name: "Cable Rope Pull-Through", m: "legs", icon: "pullthrough", cue: "Hinge and snap hips forward — squeeze glutes hard at the top", sets: [[null,"12"],[null,"12"],[null,"15"]] },
   smithlunge:    { name: "Smith Machine Reverse Lunge", m: "legs", icon: "lunge", cue: "Step back long — front heel drives you up", sets: [[null,"10/side"],[null,"10/side"],[null,"12/side"]] },
   legextension:  { name: "Leg Extension", m: "legs", icon: "legext", cue: "Squeeze quads at the top, slow negative", sets: [[null,"12"],[null,"12"],[null,"15"]] },
@@ -32,6 +36,7 @@ export const EX = {
   cablefly:      { name: "Cable Chest Fly", m: "chest", icon: "fly", cue: "Constant tension — squeeze hands together at the front", sets: [[5,"12"],[5,"12"],[5,"12"]] },
   dbpullover:    { name: "DB Pullover", m: "chest", icon: "pullover", cue: "Big stretch overhead, pull back over the chest", sets: [[5,"12"],[5,"12"],[5,"12"]] },
   smithpushup:   { name: "Smith Machine Push-Ups", m: "chest", icon: "pushup", cue: "Bar at incline — body straight like a plank", sets: [["bw","15"],["bw","15"],["bw","15"]] },
+  machinepress:  { name: "Chest & Shoulder Press Machine", m: "chest", icon: "press", cue: "Pin-loaded incline press — drives chest and front delts together", sets: [[null,"10"],[null,"12"],[null,"12"]] },
   ropepushdown:  { name: "Tricep Rope Pushdown", m: "triceps", icon: "pushdown", cue: "Elbows pinned to sides, split the rope at the bottom", sets: [[10,"10"],[7.5,"12"],[5,"15"]] },
   overheadext:   { name: "Overhead Tricep Extension — DB", m: "triceps", icon: "overhead", cue: "Elbows close to head, stretch deep behind", sets: [[12.5,"10"],[10,"12"],[7.5,"12"]] },
   closegrip:     { name: "DB Close Grip Press", m: "triceps", icon: "press", cue: "DBs touching, press with triceps not chest", sets: [[2.5,"7"],[2.5,"7"],[2.5,"7"]] },
@@ -59,24 +64,42 @@ export const EX = {
   crunchmachine: { name: "Crunch Machine", m: "core", icon: "crunch", cue: "Round the spine down — it's a crunch, not a hip hinge", sets: [[null,"15"],[null,"15"],[null,"15"]] },
 };
 
-/* ================= SESSIONS ================= */
+/* ================= SESSIONS =================
+   group: pairs the same muscle category across gyms so switching gyms keeps you on a matching day. */
 export const SESSIONS = [
-  { id: "bbc", name: "Back · Lower Back · Biceps · Core", tag: "Pull-Up Foundation", gym: "Club 16", accent: C.back,
+  { id: "bbc", group: "bbc", name: "Back · Lower Back · Biceps · Core", tag: "Pull-Up Foundation", gym: "Club 16", accent: C.back,
     warmup: "15 min elliptical + dynamic stretch",
-    main: ["deadhang","asstpullup","latpulldown","cablerow","backext","dbcurl","hammercurl","dbtwist","plank"],
-    pool: ["chestsuprow","straightarm","singlearmpd","bentcablerow","kneelpd","conccurl","dbcrunch","deadbug"] },
-  { id: "lgh", name: "Legs · Glutes", tag: "Heavy Day", gym: "Club 16", accent: C.legs,
+    main: ["asstpullup","latpulldown","cablerow","chestsuprow","backext","dbcurl","hammercurl","dbtwist","plank"],
+    pool: ["straightarm","singlearmpd","bentcablerow","kneelpd","conccurl","dbcrunch","deadbug"] },
+  { id: "lgh", group: "lgh", name: "Legs · Glutes", tag: "Heavy Day", gym: "Club 16", accent: C.legs,
     warmup: "15 min elliptical (cycle if legs sore) + dynamic stretch",
     main: ["legpress","rdl","legcurl","hipabd","sumosquat","pullthrough","calfraise"],
     pool: ["rdlcable","legextension","glutekick","smithlunge"] },
-  { id: "ctc", name: "Chest · Triceps · Shoulder · Core", tag: "Push Day", gym: "Club 16", accent: C.chest,
+  { id: "ctc", group: "ctc", name: "Chest · Triceps · Shoulder · Core", tag: "Push Day", gym: "Club 16", accent: C.chest,
     warmup: "15 min elliptical + dynamic stretch",
     main: ["dbchestpress","dbfly","smithpushup","ropepushdown","overheadext","dbshpress","dblatraise","facepulls","dbcrunch"],
     pool: ["cablefly","dbpullover","closegrip","cablereardelt","cablelateral","cablefront","inclineprone","pronefront","crunchmachine","deadbug","dblegraise","legsinout"] },
-  { id: "lglb", name: "Legs · Glutes · Lower Back", tag: "Club 16 only", gym: "Club 16", accent: C.lowerback,
+  { id: "lglb", group: "lglb", name: "Legs · Glutes · Lower Back", tag: "Glute Focus", gym: "Club 16", accent: C.lowerback,
     warmup: "15 min elliptical (cycle if legs sore) + dynamic stretch",
     main: ["rdlcable","legpress","legcurl","hipabd","glutekick","backext","calfraise"],
     pool: ["sumosquat","pullthrough","legextension"] },
+
+  { id: "gbbc", group: "bbc", name: "Back · Lower Back · Biceps · Core", tag: "Pulldown Focus", gym: "The Grand", accent: C.back,
+    warmup: "15 min treadmill or elliptical + dynamic stretch",
+    main: ["pulldownmachine","standingcablerow","dbbentrow","backext","dbcurl","hammercurl","dbtwist","plank"],
+    pool: ["facepulls","conccurl","dbcrunch","deadbug"] },
+  { id: "glgh", group: "lgh", name: "Legs · Glutes", tag: "Heavy Day", gym: "The Grand", accent: C.legs,
+    warmup: "15 min treadmill or elliptical + dynamic stretch",
+    main: ["dbgobletsquat","rdl","legextension","lyinglegcurl","smithlunge","calfraise"],
+    pool: [] },
+  { id: "gctc", group: "ctc", name: "Chest · Triceps · Shoulder · Core", tag: "Push Day", gym: "The Grand", accent: C.chest,
+    warmup: "15 min treadmill or elliptical + dynamic stretch",
+    main: ["machinepress","smithpushup","ropepushdown","dbshpress","cablelateral","facepulls","dbcrunch"],
+    pool: ["cablereardelt","dblatraise","legsinout","deadbug"] },
+  { id: "glglb", group: "lglb", name: "Legs · Glutes · Lower Back", tag: "Glute Focus", gym: "The Grand", accent: C.lowerback,
+    warmup: "15 min treadmill or elliptical + dynamic stretch",
+    main: ["rdl","legextension","lyinglegcurl","backext","smithlunge","calfraise"],
+    pool: ["dbgobletsquat"] },
 ];
 
 /* ================= SUPPLEMENTS ================= */
