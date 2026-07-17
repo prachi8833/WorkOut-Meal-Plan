@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { C, MUSCLE_LABEL, font } from "./theme.js";
 import { Figure } from "./icons.jsx";
 import Guided from "./Guided.jsx";
+import { estimateSessionCalories } from "./calories.js";
+import { dateKey } from "./date.js";
 
 const MUSCLES = Object.keys(MUSCLE_LABEL).filter(m => !["fullbody", "cardio"].includes(m));
 
@@ -160,7 +162,7 @@ function AddExercise({ doc, update, session }) {
 
 export default function TrainTab({ doc, update, editMode }) {
   const [sessionId, setSessionId] = useState(doc.sessions[0]?.id);
-  const [guided, setGuided] = useState(null); // array of exIds
+  const [guided, setGuided] = useState(null); // { queue: [exIds], full: bool } | null
   const session = doc.sessions.find(s => s.id === sessionId) || doc.sessions[0];
   const tabsRef = useRef(null);
   const drag = useRef(null);
@@ -194,6 +196,14 @@ export default function TrainTab({ doc, update, editMode }) {
   const rotationEx = session.pool.length ? session.pool[(session.rot || 0) % session.pool.length] : null;
 
   const patchSession = (fn) => { const next = structuredClone(doc); fn(next.sessions.find(s => s.id === session.id)); update(next); };
+  const logWorkout = () => {
+    const today = dateKey(new Date());
+    const calories = estimateSessionCalories(session, doc.exercises);
+    const next = structuredClone(doc);
+    next.log = next.log || {};
+    next.log[today] = { sessionId: session.id, sessionName: session.name, gym: session.gym, accent: session.accent, calories };
+    update(next);
+  };
   const removeFromMain = (i) => patchSession(s => s.main.splice(i, 1));
   const move = (i, dir) => patchSession(s => {
     const j = i + dir; if (j < 0 || j >= s.main.length) return;
@@ -232,7 +242,7 @@ export default function TrainTab({ doc, update, editMode }) {
       </div>
 
       {!editMode && (
-        <button onClick={() => setGuided(fullQueue)}
+        <button onClick={() => setGuided({ queue: fullQueue, full: true })}
           style={{ padding: "15px 0", borderRadius: 14, background: session.accent, color: "#17141A", border: "none", fontFamily: font.body, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
           ▶ Start guided workout — voice counting + rest timers
         </button>
@@ -248,7 +258,7 @@ export default function TrainTab({ doc, update, editMode }) {
       {session.main.map((exId, i) => (
         <ExerciseCard key={exId + i} exId={exId} num={i + 1} doc={doc} update={update} editMode={editMode}
           onRemove={() => removeFromMain(i)} onMove={d => move(i, d)}
-          onPlay={() => setGuided([exId])} />
+          onPlay={() => setGuided({ queue: [exId], full: false })} />
       ))}
 
       {editMode && <AddExercise doc={doc} update={update} session={session} />}
@@ -258,14 +268,14 @@ export default function TrainTab({ doc, update, editMode }) {
           <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase", color: session.accent, marginBottom: 8 }}>↻ This week's rotation slot</div>
           <ExerciseCard exId={rotationEx} num={session.main.length + 1} doc={doc} update={update} editMode={editMode}
             swap={() => patchSession(s => { s.rot = ((s.rot || 0) + 1) % s.pool.length; })}
-            onPlay={() => setGuided([rotationEx])} />
+            onPlay={() => setGuided({ queue: [rotationEx], full: false })} />
           <div style={{ fontSize: 11.5, color: C.faint, marginTop: 6, lineHeight: 1.5 }}>
             Rotates through: {session.pool.map(id => doc.exercises[id]?.name).filter(Boolean).join(" · ")}
           </div>
         </div>
       )}
 
-      {guided && <Guided queue={guided} doc={doc} onClose={() => setGuided(null)} />}
+      {guided && <Guided queue={guided.queue} doc={doc} onClose={() => setGuided(null)} onComplete={guided.full ? logWorkout : undefined} />}
     </div>
   );
 }

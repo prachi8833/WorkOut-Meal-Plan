@@ -174,5 +174,7 @@ export function defaultDoc() {
     food: JSON.parse(JSON.stringify(FOOD)),
     settings: { tempoSec: 3, restSec: 75 },
     foodSeed: null,
+    log: {}, // "YYYY-MM-DD" -> { sessionId, sessionName, gym, accent, calories }
+    targets: { weeklyVisits: 4, weeklyCalories: 1200 },
   };
 }

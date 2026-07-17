@@ -3,6 +3,7 @@ import { C, font } from "./theme.js";
 import { supabase, configured, loadDoc, saveDoc } from "./supabase.js";
 import { defaultDoc } from "./seed.js";
 import TrainTab from "./TrainTab.jsx";
+import ProgressTab from "./ProgressTab.jsx";
 import { SuppsTab, FoodTab, Auth } from "./Tabs.jsx";
 
 const GlobalStyle = () => (
@@ -100,6 +101,7 @@ export default function App() {
 
   const tabs = [
     { id: "train", label: "Train", emoji: "🏋️" },
+    { id: "progress", label: "Progress", emoji: "📅" },
     { id: "supps", label: "Supps", emoji: "⏰" },
     { id: "food", label: "Food", emoji: "🍛" },
   ];
@@ -131,6 +133,7 @@ export default function App() {
         ) : (
           <>
             {tab === "train" && <TrainTab doc={doc} update={update} editMode={editMode} />}
+            {tab === "progress" && <ProgressTab doc={doc} update={update} editMode={editMode} />}
             {tab === "supps" && <SuppsTab doc={doc} update={update} editMode={editMode} />}
             {tab === "food" && <FoodTab doc={doc} update={update} editMode={editMode} />}
             {tab === "train" && editMode && (

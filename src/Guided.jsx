@@ -20,7 +20,7 @@ function parseReps(str) {
   return { n: parseInt(m[2] || m[1], 10), side: /side/i.test(s) };
 }
 
-export default function Guided({ queue, doc, onClose }) {
+export default function Guided({ queue, doc, onClose, onComplete }) {
   const tempoMs = (doc.settings?.tempoSec ?? 3) * 1000;
   const restSec = doc.settings?.restSec ?? 75;
   const [exIdx, setExIdx] = useState(0);
@@ -110,7 +110,7 @@ export default function Guided({ queue, doc, onClose }) {
   function finishSet() {
     const lastSet = setIdx >= sets.length - 1;
     const lastEx = exIdx >= queue.length - 1;
-    if (lastSet && lastEx) { speak("Session complete. Great work, Prachi!"); setPhase("done"); return; }
+    if (lastSet && lastEx) { speak("Session complete. Great work, Prachi!"); setPhase("done"); onComplete?.(); return; }
     if (lastSet) speak(`${ex.name} done. Next: ${doc.exercises[queue[exIdx + 1]]?.name}.`);
     else speak("Set done.");
     setPhase("rest");
