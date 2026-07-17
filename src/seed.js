@@ -61,30 +61,22 @@ export const EX = {
 
 /* ================= SESSIONS ================= */
 export const SESSIONS = [
-  { id: "bbc", name: "Back · Biceps · Core", tag: "Pull-Up Foundation", gym: "Club 16", accent: C.back,
+  { id: "bbc", name: "Back · Lower Back · Biceps · Core", tag: "Pull-Up Foundation", gym: "Club 16", accent: C.back,
     warmup: "15 min elliptical + dynamic stretch",
-    main: ["deadhang","asstpullup","latpulldown","cablerow","chestsuprow","dbcurl","hammercurl","dbtwist","plank"],
-    pool: ["straightarm","singlearmpd","bentcablerow","kneelpd","conccurl","dbcrunch","deadbug"] },
+    main: ["deadhang","asstpullup","latpulldown","cablerow","backext","dbcurl","hammercurl","dbtwist","plank"],
+    pool: ["chestsuprow","straightarm","singlearmpd","bentcablerow","kneelpd","conccurl","dbcrunch","deadbug"] },
   { id: "lgh", name: "Legs · Glutes", tag: "Heavy Day", gym: "Club 16", accent: C.legs,
     warmup: "15 min elliptical (cycle if legs sore) + dynamic stretch",
     main: ["legpress","rdl","legcurl","hipabd","sumosquat","pullthrough","calfraise"],
     pool: ["rdlcable","legextension","glutekick","smithlunge"] },
-  { id: "ctc", name: "Chest · Triceps · Core", tag: "Push Day", gym: "Club 16", accent: C.chest,
+  { id: "ctc", name: "Chest · Triceps · Shoulder · Core", tag: "Push Day", gym: "Club 16", accent: C.chest,
     warmup: "15 min elliptical + dynamic stretch",
-    main: ["dbchestpress","dbfly","cablefly","dbpullover","smithpushup","ropepushdown","overheadext","dbcrunch","legsinout"],
-    pool: ["closegrip","crunchmachine","deadbug","dblegraise"] },
+    main: ["dbchestpress","dbfly","smithpushup","ropepushdown","overheadext","dbshpress","dblatraise","facepulls","dbcrunch"],
+    pool: ["cablefly","dbpullover","closegrip","cablereardelt","cablelateral","cablefront","inclineprone","pronefront","crunchmachine","deadbug","dblegraise","legsinout"] },
   { id: "lglb", name: "Legs · Glutes · Lower Back", tag: "Club 16 only", gym: "Club 16", accent: C.lowerback,
     warmup: "15 min elliptical (cycle if legs sore) + dynamic stretch",
     main: ["rdlcable","legpress","legcurl","hipabd","glutekick","backext","calfraise"],
     pool: ["sumosquat","pullthrough","legextension"] },
-  { id: "sbc", name: "Shoulders · Biceps · Core", tag: "All 3 Delts", gym: "Club 16", accent: C.shoulders,
-    warmup: "15 min elliptical + dynamic stretch",
-    main: ["dbshpress","dblatraise","cablereardelt","cablelateral","facepulls","hammercurl","conccurl","dbtwist","plank"],
-    pool: ["cablefront","inclineprone","pronefront","dbcurl","sidebend"] },
-  { id: "fb", name: "Full Body", tag: "Building Gym", gym: "Building Gym", accent: C.fullbody,
-    warmup: "15 min cardio of choice + dynamic stretch",
-    main: ["smithlunge","rdl","latpulldown","dbshpress","dbfly","ropepushdown","hammercurl","deadbug","plank"],
-    pool: ["smithpushup","legcurl","legextension","dbtwist","dblegraise"] },
 ];
 
 /* ================= SUPPLEMENTS ================= */
