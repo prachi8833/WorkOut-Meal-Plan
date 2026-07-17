@@ -24,6 +24,7 @@ export const EX = {
   hipabd:        { name: "Hip Abduction", m: "legs", icon: "abduction", cue: "Lean slightly forward for upper glute — pause at the widest point", sets: [[110,"10"],[100,"12"],[90,"15"]] },
   sumosquat:     { name: "Cable Sumo Squat", m: "legs", icon: "squat", cue: "Wide stance, toes out — sit between your heels", sets: [[35,"10"],[30,"12"],[25,"12"]] },
   dbgobletsquat: { name: "DB Goblet Squat", m: "legs", icon: "squat", cue: "DB held at chest, sit between your heels, chest tall", sets: [[null,"10"],[null,"12"],[null,"12"]] },
+  dblunge:       { name: "DB Reverse Lunge", m: "legs", icon: "lunge", cue: "Step back long, DBs at sides — front heel drives you up", sets: [[null,"10/side"],[null,"10/side"],[null,"12/side"]] },
   pullthrough:   { name: "Cable Rope Pull-Through", m: "legs", icon: "pullthrough", cue: "Hinge and snap hips forward — squeeze glutes hard at the top", sets: [[null,"12"],[null,"12"],[null,"15"]] },
   smithlunge:    { name: "Smith Machine Reverse Lunge", m: "legs", icon: "lunge", cue: "Step back long — front heel drives you up", sets: [[null,"10/side"],[null,"10/side"],[null,"12/side"]] },
   legextension:  { name: "Leg Extension", m: "legs", icon: "legext", cue: "Squeeze quads at the top, slow negative", sets: [[null,"12"],[null,"12"],[null,"15"]] },
@@ -37,6 +38,8 @@ export const EX = {
   dbpullover:    { name: "DB Pullover", m: "chest", icon: "pullover", cue: "Big stretch overhead, pull back over the chest", sets: [[5,"12"],[5,"12"],[5,"12"]] },
   smithpushup:   { name: "Smith Machine Push-Ups", m: "chest", icon: "pushup", cue: "Bar at incline — body straight like a plank", sets: [["bw","15"],["bw","15"],["bw","15"]] },
   machinepress:  { name: "Chest & Shoulder Press Machine", m: "chest", icon: "press", cue: "Pin-loaded incline press — drives chest and front delts together", sets: [[null,"10"],[null,"12"],[null,"12"]] },
+  dbfloorpress:  { name: "DB Floor Press", m: "chest", icon: "press", cue: "Lie on the floor, press up — elbows tap the ground each rep", sets: [[null,"10"],[null,"12"],[null,"12"]] },
+  regpushup:     { name: "Push-Ups", m: "chest", icon: "pushup", cue: "Hands under shoulders, body straight — no equipment needed", sets: [["bw","15"],["bw","15"],["bw","15"]] },
   ropepushdown:  { name: "Tricep Rope Pushdown", m: "triceps", icon: "pushdown", cue: "Elbows pinned to sides, split the rope at the bottom", sets: [[10,"10"],[7.5,"12"],[5,"15"]] },
   overheadext:   { name: "Overhead Tricep Extension — DB", m: "triceps", icon: "overhead", cue: "Elbows close to head, stretch deep behind", sets: [[12.5,"10"],[10,"12"],[7.5,"12"]] },
   closegrip:     { name: "DB Close Grip Press", m: "triceps", icon: "press", cue: "DBs touching, press with triceps not chest", sets: [[2.5,"7"],[2.5,"7"],[2.5,"7"]] },
@@ -100,6 +103,11 @@ export const SESSIONS = [
     warmup: "15 min treadmill or elliptical + dynamic stretch",
     main: ["rdl","legextension","lyinglegcurl","backext","smithlunge","calfraise"],
     pool: ["dbgobletsquat"] },
+
+  { id: "fb", group: "fb", name: "Full Body", tag: "Dumbbells Only", gym: "Anywhere", accent: C.fullbody,
+    warmup: "5 min jumping jacks / jog in place + dynamic stretch",
+    main: ["dbgobletsquat","rdl","dblunge","dbbentrow","dbfloorpress","dbshpress","hammercurl","overheadext","dbtwist","plank"],
+    pool: ["dbcurl","dblatraise","regpushup","calfraise","dbcrunch","deadbug"] },
 ];
 
 /* ================= SUPPLEMENTS ================= */
